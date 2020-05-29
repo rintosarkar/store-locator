@@ -26,11 +26,24 @@ function initMap() {
     map: map,
     title: 'Hello World!'
 });
-displayStores();
-showStoresMarker();
+searchStores();
+// displayStores();
+// showStoresMarker();
+// setOnClickListener();
 }
 
-function displayStores()
+function setOnClickListener(stores){
+    var storeElements = document.querySelectorAll('.store-container');
+    // console.log(storeElements);
+    storeElements.forEach(function(elem, index){
+        elem.addEventListener('click', function(){
+            google.maps.event.trigger(markers[index], 'click');
+
+        });
+    });
+}
+
+function displayStores(stores)
 {
     var storesHtml = "";
     stores.forEach(function(store,index){
@@ -57,10 +70,10 @@ function displayStores()
     document.querySelector('.stores-list').innerHTML = storesHtml
 }
 
-function showStoresMarker(){
+function showStoresMarker(stores){
     var bounds = new google.maps.LatLngBounds();
 
-    stores.forEach(function(store){
+    stores.forEach(function(store,index){
         var latlng = new google.maps.LatLng(
             store.coordinates.latitude,
             store.coordinates.longitude
@@ -71,7 +84,7 @@ function showStoresMarker(){
         var status = store.openStatusText;
         var phone = store.phoneNumber;
         bounds.extend(latlng);
-        createMarker(latlng, name, address,status,phone) 
+        createMarker(latlng, name, address,status,phone,index) 
         map.fitBounds(bounds);
     });
 }
@@ -79,22 +92,35 @@ function showStoresMarker(){
 
 
 
-function createMarker(latlng, name, address,status,phone)
+function createMarker(latlng, name, address,status,phone,index)
 {
     var html = `
         <div class="store-info-window">
             <div class="store-info-name">${name}</div>
-            <div class="store-info-status">${status}</div>
-            <div class="store-info-address">${address} </div>
-            <div class="store-info-phone">${phone}</div>
+            <div class="store-info-status">
+            <i class="far fa-clock"></i>
+                ${status}
+            </div>
+            <div class="store-info-address">
+                <div class="circle">
+                    <i class="fas fa-location-arrow"></i> 
+                </div>
+                  ${address} 
+            </div>
+            <div class="store-info-phone">
+            <div class="circle">
+                <i class="fas fa-phone-alt"></i> 
+            </div> 
+                ${phone}
+            </div>
         </div>
     `;
+    url = 'img/cup3.png'
     var marker = new google.maps.Marker({
         map: map,
         position: latlng,
-        // icon: {
-        //     url: "https://maps.gstatic.com/mapfiles/transparent.png"
-        //   }
+        icon: url,
+        label:`${index+1}`
     });
     google.maps.event.addListener(marker, 'click', function(){
         infoWindow.setContent(html);
@@ -102,6 +128,39 @@ function createMarker(latlng, name, address,status,phone)
     });
 
     markers.push(marker);
+}
+
+function searchStores()
+{
+    var zipCode = document.getElementById('zip-code-input').value;
+    var foundStores = [];
+    if(zipCode){
+        stores.forEach(function(store){
+            var postal = store.address.postalCode.substring(0,5);
+            if(postal == zipCode ){
+                foundStores.push(store);
+            }
+        });
+        
+        
+    }else{
+        foundStores=stores
+    }
+    clearLocation();
+    displayStores(foundStores);
+    showStoresMarker(foundStores);
+    setOnClickListener(foundStores)
+
+
+    // console.log(zipCode);
+}
+
+function clearLocation(){
+    infoWindow.close();
+    for(var i=0; i<markers.length; i++ ){
+        markers[i].setMap(null);
+    }
+    markers.length=0; 
 }
 
 

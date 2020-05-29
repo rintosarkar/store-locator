@@ -61,8 +61,7 @@ body {
     top: 280px;
     left: 100px;
     bottom: 20px;
-    overflow: hidden;
-    overflow: scroll;
+    overflow-y: scroll;
     
 }
 
@@ -75,13 +74,27 @@ body {
     display: flex;
     border-bottom: 1px solid #979797;
     padding-left: 20px;
+    cursor: pointer;
+    
 
 }
 
-.store-container:hover{
+.store-container-background:hover{
+    width: 100%;
+    display: flex;
+    background-color: #ccc;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    transition: background 0.2 ease-in-out;
+}
+
+/* .store-container:hover{
     background-color: #979797;
     border-radius: 30px;
-}
+} */
 
 .store-info-container{
     flex-grow: 1;
@@ -145,6 +158,20 @@ body {
 
 .store-info-address, .store-info-phone{
     margin-top: 8px;
+    display:flex;
+    align-items: center;
+}
+
+.store-info-address .circle, .store-info-phone .circle{
+    width: 30px;
+    height: 30px;
+    background-color: #DB1E1E;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
 }
 
 
