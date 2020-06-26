@@ -6,10 +6,14 @@
     <title>EPIC STORE LOCATOR</title>
 
     <link rel="stylesheet" href="style/style.css" />
-    <script src="js/store-data.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@1,200&display=swap"
+      rel="stylesheet"
+    />
+    <script src="js/data.js"></script>
   </head>
   <body>
-    <div class="title">Store Locator</div>
+    <div class="title">Tokyo Starbucks Locator</div>
     <div class="search-container">
       <div class="search">
         <input
@@ -21,24 +25,10 @@
         <i class="fas fa-search fa-2x" onclick="searchStores()"></i>
       </div>
     </div>
-    <div class="stores-list-container">
+    <div class="stores-list-container" id="storeListContainer">
       <div class="stores-list">
         <div class="store-container">
-          <!-- <div class="store-info-container">
-                    <div class="store-address">
-                        <span>8480 Beverly Blvd </span>
-                        <span>Los Angeles, CA 90048</span>
-                    </div>
-                    <div class="store-phone-number">
-                        356-345-4654
-                    </div>
-                   
-                </div>
-                <div class="store-nubmer-container">
-                    <div class="store-number">
-                        1      
-                    </div>
-                </div> -->
+          <!-- <div id="store-info-window-header1"></div> -->
         </div>
       </div>
     </div>
@@ -46,7 +36,7 @@
 
     <script src="js/index.js"></script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBh15L6ZQVrZVsMjwAhb_3-X6bbgpSGtQk&callback=initMap"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbPJAJx3vGRqcGoteXErWhv3oPtZVryIQ&callback=initMap&libraries=places"
       async
       defer
     ></script>

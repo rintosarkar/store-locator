@@ -6,13 +6,12 @@ function initMap() {
   var losangels = { lat: 34.0522, lng: -118.2437 };
   map = new google.maps.Map(document.getElementById("map"), {
     center: losangels,
-    // styles:styles,
     zoom: 8,
     styles: [
       {
         featureType: "all",
         elementType: "geometry",
-        stylers: [{ hue: "#256bc2" }, { saturation: 48 }, { lightness: 8 }],
+        stylers: [{ hue: "#db1e1e" }, { saturation: 48 }, { lightness: 8 }],
       },
       {
         featureType: "all",
@@ -30,7 +29,6 @@ function initMap() {
   var marker = new google.maps.Marker({
     position: losangels,
     map: map,
-    title: "Hello World!",
   });
   searchStores();
   // displayStores();
@@ -87,7 +85,7 @@ function showStoresMarker(stores) {
     // console.log(latlng)
     var name = store.name;
     var address = store.addressLines[0];
-    var status = store.openStatusText;
+    var status = store.timeZoneInfo.olsonTimeZoneId;
     var phone = store.phoneNumber;
     bounds.extend(latlng);
     createMarker(latlng, name, address, status, phone, index);
@@ -98,7 +96,14 @@ function showStoresMarker(stores) {
 function createMarker(latlng, name, address, status, phone, index) {
   var html = `
         <div class="store-info-window">
+            <div class="store-info-window-header">
+            
+            <img id="store-info-window-header${index + 1}"/>
+            
             <div class="store-info-name">${name}</div>
+             
+            </div>
+            
             <div class="store-info-status">
             <i class="far fa-clock"></i>
                 ${status}
@@ -122,11 +127,12 @@ function createMarker(latlng, name, address, status, phone, index) {
     map: map,
     position: latlng,
     icon: url,
-    label: `${index + 1}`,
+    // label: `${index + 1}`,
   });
   google.maps.event.addListener(marker, "click", function () {
     infoWindow.setContent(html);
     infoWindow.open(map, marker);
+    getPlaceImage(address, latlng, map, index);
   });
 
   markers.push(marker);
@@ -149,8 +155,6 @@ function searchStores() {
   displayStores(foundStores);
   showStoresMarker(foundStores);
   setOnClickListener(foundStores);
-
-  // console.log(zipCode);
 }
 
 function clearLocation() {
@@ -161,15 +165,43 @@ function clearLocation() {
   markers.length = 0;
 }
 
-// function createMarker(latlng, name, address) {
-//     var html = "<b>" + name + "</b> <br/>" + address;
-//     var marker = new google.maps.Marker({
-//       map: map,
-//       position: latlng
-//     });
-//     google.maps.event.addListener(marker, 'click', function() {
-//       infoWindow.setContent(html);
-//       infoWindow.open(map, marker);
-//     });
-//     markers.push(marker);
-//   }
+function getPlaceImage(address, data, map, index) {
+  var query = {
+    location: data,
+    radius: "100",
+    keyword: address,
+  };
+
+  var service = new google.maps.places.PlacesService(map);
+  let imgId = "store-info-window-header" + (parseInt(index) + 1);
+
+  service.nearbySearch(query, function (results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].photos != null) {
+          document.getElementById(imgId).src = results[i].photos[0].getUrl({
+            maxWidth: 500,
+            maxHeight: 500,
+            output: "thumbnail",
+          });
+          break;
+        }
+      }
+    } else {
+      document.getElementById(imgId).src = "../img/no_img2.png";
+    }
+  });
+}
+
+function getStreetAddress(lat, lng) {
+  $("#currentLocationRow").show();
+  var geocoder = new google.maps.Geocoder(); // create a geocoder object
+  var location = new google.maps.LatLng(lat, lng); // turn coordinates into an object
+  geocoder.geocode({ latLng: location }, function (result, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      var add = result[0].formatted_address;
+      var removePostCode = add.slice(12);
+      $("#currentLocation").text(removePostCode);
+    }
+  });
+}
