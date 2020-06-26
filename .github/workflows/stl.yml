@@ -13,4 +13,4 @@ jobs:
       with:
         ftp-server: ftp.rintosarkar.com/public_html/stl
         ftp-username: rinto_s@rintosarkar.com
-        ftp-password: ${{ secrets.FTP_PASSWORD }}
+        ftp-password: ${{ secrets.ftp_pass }}
