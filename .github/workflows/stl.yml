@@ -12,5 +12,5 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
         ftp-server: ftp.rintosarkar.com/public_html/stl
-        ftp-username: rinto_s@rintosarkar.com
+        ftp-username: rintosar
         ftp-password: ${{ secrets.ftp_pass }}
